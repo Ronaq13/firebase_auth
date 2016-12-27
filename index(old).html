@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="authApp">
+
+<head>
+    <title>Auth app</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <link href="/favicon.ico" type="image/x-icon" rel="icon" />
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-theme.min.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <!-- (for angular Material) -->
+    <script src="https://www.gstatic.com/firebasejs/3.6.4/firebase.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-aria.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-messages.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+
+    <script>
+        var config = {
+            apiKey: "AIzaSyDbd6bvg2fQ50Fvo_b-WA6SUNPFHogX-3w",
+            authDomain: "aviate-web-e6ae0.firebaseapp.com",
+            databaseURL: "https://aviate-web-e6ae0.firebaseio.com",
+            storageBucket: "aviate-web-e6ae0.appspot.com",
+            messagingSenderId: "151455867392"
+        };
+        firebase.initializeApp(config);
+
+
+        // Getting elements
+
+        var btnLogin = document.getElementById('btnLogin');
+        var btnSignup = document.getElementById('btnSignup');
+
+
+        // sign up call back function
+
+        function signUp() {
+            const email = document.getElementById('email');
+            const pass = document.getElementById('password');
+            if (typeof email !== 'undefined') {
+                var email = email.value;
+            }
+            if (typeof pass !== 'undefined') {
+                var pass = pass.value;
+            }
+
+            firebase.auth().createUserWithEmailAndPassword(email, pass).catch(function(error) {
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                if (errorCode == 'auth/weak-password') {
+                    alert('The password is too weak.')
+                } else {
+                    alert(errorMessage);
+                }
+                console.log(error);
+            });
+        }
+
+        // sign in call back function
+        function signIn() {
+            if (firebase.auth().currentUser) {
+                firebase.auth().signOut();
+            } else {
+                var email = document.getElementById('email').value;
+                var password = document.getElementById('password').value;
+                fierbase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+                    // [START_EXCLUDE]
+                    if (errorCode === 'auth/wrong-password') {
+                        alert('Wrong password.');
+                    } else {
+                        alert(errorMessage);
+                    }
+                    console.log(error);
+                    document.getElementById('btnLogin').disable = false;
+                });
+                document.getElementById('btnLogin').disable = true;
+            }
+        }
+
+        function initApp() {
+            firebase.auth().onAuthStateChanged(function(user) {
+                if (user) {
+                    // If user is signed in already
+                    var email = user.email;
+                    var pass = user.password;
+                    document.getElementById('btnLogin').textContent = 'Sign Out';
+                    document.getElementById('signInStatus').textContent = 'Signed In';
+                } else {
+                    document.getElementById('btnLogin').textContent = 'Sign In';
+                    document.getElementById('signInStatus').textContent = 'Signed Out';
+                }
+            });
+
+
+            // setting of all functions
+            document.getElementById('btnLogin').addEventListener('click', signIn, false);
+            document.getElementById('btnSignup').addEventListener('click', signUp, false);
+        }
+
+        window.onload = function() {
+            initApp();
+        };
+    </script>
+</head>
+
+<body>
+
+    <div class="row" id="box">
+        <div class="col-xs-10 col-xs-push-1 col-sm-4 col-sm-push-4">
+            <input class="mdl-textfield__input" style="display:inline;width:auto;" type="text" id="email" name="email" placeholder="Email" /> &nbsp;&nbsp;&nbsp;
+            <input class="mdl-textfield__input" style="display:inline;width:auto;" type="password" id="password" name="password" placeholder="Password" />
+            <md-button id="btnLogin" class="md-raised md-primary">Log In</md-button>
+            <md-button id="btnSignup" class="md-raised"><span style="color: blue;">Sing Up</span>
+        </div>
+    </div>
+    <div class="row">
+        <p id="signInStatus" style="text-align: center;"></p>
+    </div>
+
+
+    <!-- scripts -->
+    <script src="script/app.js"></script>
+
+
+</body>
+
+</html>
