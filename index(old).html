@@ -43,13 +43,15 @@
         // sign up call back function
 
         function signUp() {
-            const email = document.getElementById('email');
-            const pass = document.getElementById('password');
-            if (typeof email !== 'undefined') {
-                var email = email.value;
+            if (document.getElementById('email') !== 'undefined') {
+                var email = document.getElementById('email').value;
+            } else {
+                console.log("Mistake is there...");
             }
-            if (typeof pass !== 'undefined') {
-                var pass = pass.value;
+            if (document.getElementById('password') !== 'undefined') {
+                var pass = document.getElementById('password').value;
+            } else {
+                console.log("Mistake is there...");
             }
 
             firebase.auth().createUserWithEmailAndPassword(email, pass).catch(function(error) {
@@ -71,7 +73,7 @@
             } else {
                 var email = document.getElementById('email').value;
                 var password = document.getElementById('password').value;
-                fierbase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+                firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
                     var errorCode = error.code;
                     var errorMessage = error.message;
                     // [START_EXCLUDE]
