@@ -7,7 +7,7 @@
      messagingSenderId: "151455867392"
  };
  firebase.initializeApp(config);
-
+ //*************************************************************--AUTHENTICATION--***************************************************************** */
  /**
   * Handles the sign in button press.
   */
@@ -96,3 +96,24 @@
      document.getElementById('quickstart-sign-in').addEventListener('click', toggleSignIn, false);
      document.getElementById('quickstart-sign-up').addEventListener('click', handleSignUp, false);
  }
+
+ //**********************************************************************AUTHENTICATION-END************************************************************/
+
+
+ //*******************************************************************-- DATABASE --******************************************************************/
+
+
+ //Getting the element
+ var preObject = document.getElementById('object');
+
+ //Creating reference
+ const dbRefObject = firebase.database().ref().child('object');
+
+ //Sync data in real time -> by 'on' method, 'snap' is snapshot of your data, so you nedd to call .val to get only value.
+ dbRefObject.on('value', snap => {
+     if (document.getElementById('object') !== 'undefined') {
+         document.getElementById('object').innerText = JSON.stringify(snap.val(), null, 3);
+     } else {
+         console.log("There is an error");
+     }
+ });
