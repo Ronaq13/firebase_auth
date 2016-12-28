@@ -105,9 +105,11 @@
 
  //Getting the element
  var preObject = document.getElementById('object');
-
+ var ulList = document.getElementById('list'); //Not accessible inside any function.
  //Creating reference
  const dbRefObject = firebase.database().ref().child('object');
+ const dbRefList = dbRefObject.child('hobbies');
+
 
  //Sync data in real time -> by 'on' method, 'snap' is snapshot of your data, so you nedd to call .val to get only value.
  dbRefObject.on('value', snap => {
@@ -116,4 +118,35 @@
      } else {
          console.log("There is an error");
      }
+ });
+
+ dbRefList.on('child_added', snap => {
+     var x = document.createElement('li');
+     x.innerText = snap.val();
+     if (document.getElementById('list') !== 'undefined') {
+         x.id = snap.key;
+         document.getElementById('list').appendChild(x);
+     } else {
+         console.log("there is a mistake");
+     }
+
+ });
+
+ dbRefList.on('child_changed', snap => {
+     var x = document.getElementById(snap.key); //Important: dont put coloumn like this: 'snap.key' -> this will not work.
+     console.log(x);
+     if (document.getElementById(snap.key) !== 'null') {
+         document.getElementById(snap.key).innerText = snap.val();
+     } else {
+         console.log("Updated child's key value is null");
+     }
+ });
+
+ dbRefList.on('child_removed', snap => {
+     if (document.getElementById(snap.key) !== null) {
+         document.getElementById(snap.key).remove();
+     } else {
+         console.log("Removed child's key value is null");
+     }
+
  });
