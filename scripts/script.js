@@ -98,6 +98,8 @@
  }
 
  //**********************************************************************AUTHENTICATION-END************************************************************/
+
+ //************************************-SENDING DATA TO DATABASE-********************* */
  var sendBtn = document.getElementById('sendBtn');
  sendBtn.addEventListener('click', writeAssignment);
 
