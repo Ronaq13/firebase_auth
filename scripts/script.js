@@ -105,22 +105,30 @@
      if (document.getElementById('quickstart-sign-in-status').textContent == "Signed in") {
          var project_ID_1 = document.getElementById('project_ID_1');
          var project_ID_2 = document.getElementById('project_ID_2');
+         // Selecting Project
 
+         var ref;
+         if (project_ID_1.checked) {
+             ref = firebase.database().ref().child("projects").child("-K_67USuFWlpe6PmMqWm");
 
-         var ref = firebase.database().ref("projects/");
+         } else if (project_ID_2.checked) {
+             ref = firebase.database().ref().child('projects').child("-K_8dq9da4rBhdPl5FlK");
+         } else {
+             console.log("Error in checkBox");
+         }
+
+         // checking data
          if (document.getElementById('username') !== null) {
              var username = document.getElementById('username').value;
          }
          var roll_no = document.getElementById('roll_no');
+         // var ref = firebase.database().ref('projects').child('-K_67USuFWlpe6PmMqWm');
+         // sending data to firebase database
          ref.push({
              Name: username,
-             Roll_no: roll_no.value,
-             Marks: {
-                 math: "88",
-                 physics: "99",
-                 chem: "89"
-             }
+             Roll_no: roll_no.value
          });
+
      } else {
          alert("First Sign In please.");
      }
