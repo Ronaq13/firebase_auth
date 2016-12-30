@@ -77,13 +77,13 @@
 
              var uid = user.uid;
              var providerData = user.providerData;
-
+             document.getElementById('afterSignInDiv').style.visibility = 'visible';
              document.getElementById('quickstart-sign-in-status').textContent = 'Signed in';
              document.getElementById('quickstart-sign-in').textContent = 'Sign out';
              document.getElementById('quickstart-account-details').textContent = JSON.stringify(user, null, '  ');
 
          } else {
-
+             document.getElementById('afterSignInDiv').style.visibility = 'hidden';
              document.getElementById('quickstart-sign-in-status').textContent = 'Signed out';
              document.getElementById('quickstart-sign-in').textContent = 'Sign in';
              document.getElementById('quickstart-account-details').textContent = 'null';
@@ -107,29 +107,34 @@
      if (document.getElementById('quickstart-sign-in-status').textContent == "Signed in") {
          var project_ID_1 = document.getElementById('project_ID_1');
          var project_ID_2 = document.getElementById('project_ID_2');
-         // Selecting Project
 
+         // checking data
+         if (document.getElementById('username') !== null && document.getElementById('assiID') !== null && document.getElementById('roll_no') !== null) {
+             var username = document.getElementById('username').value;
+             var assiID = document.getElementById('assiID').value;
+             var roll_no = document.getElementById('roll_no').value;
+         }
+
+         var assiData = {
+             Name: username,
+             Roll_no: roll_no,
+         };
+         var updates = {};
+         // Selecting Project
          var ref;
          if (project_ID_1.checked) {
-             ref = firebase.database().ref().child("projects").child("-K_67USuFWlpe6PmMqWm");
+             ref = firebase.database().ref().child("projects").child("project_0001");
+             updates[assiID] = assiData;
 
          } else if (project_ID_2.checked) {
-             ref = firebase.database().ref().child('projects').child("-K_8dq9da4rBhdPl5FlK");
+             ref = firebase.database().ref().child('projects').child("project_0002");
+             updates[assiID] = assiData;
          } else {
              console.log("Error in checkBox");
          }
 
-         // checking data
-         if (document.getElementById('username') !== null) {
-             var username = document.getElementById('username').value;
-         }
-         var roll_no = document.getElementById('roll_no');
-         // var ref = firebase.database().ref('projects').child('-K_67USuFWlpe6PmMqWm');
          // sending data to firebase database
-         ref.push({
-             Name: username,
-             Roll_no: roll_no.value
-         });
+         ref.update(updates);
 
      } else {
          alert("First Sign In please.");
@@ -137,55 +142,81 @@
 
  }
 
+
+ var updateBtn = document.getElementById('updateBtn');
+ updateBtn.addEventListener('click', updateAssignment);
+
+ function updateAssignment() {
+     if (document.getElementById('quickstart-sign-in-status').textContent == "Signed in") {
+         var project_ID_1 = document.getElementById('project_ID_1');
+         var project_ID_2 = document.getElementById('project_ID_2');
+
+         var ref;
+
+         if (project_ID_1.checked) {
+             ref = firebase.database().ref().child("projects").child("project_0001");
+
+         } else if (project_ID_2.checked) {
+             ref = firebase.database().ref().child('projects').child("project_0002");
+         } else {
+             console.log("Error in checkBox");
+         }
+     }
+ }
+
  //*******************************************************************-- DATABASE --******************************************************************/
 
  /*
-  //Getting the element
-  var preObject = document.getElementById('object');
-  var ulList = document.getElementById('list'); //Not accessible inside any function.
-  //Creating reference
-  const dbRefObject = firebase.database().ref().child('object');
-  const dbRefList = dbRefObject.child('hobbies');
+      //Getting the element of HTML
+      var preObject = document.getElementById('object');
+      var ulList1 = document.getElementById('list1'); //Not accessible inside any function.
+      //Creating reference of database
+      const dbRefProjects = firebase.database().ref().child('projects');
+      const dbRefList1 = dbRefProjects.child('-K_67USuFWlpe6PmMqWm');
+      const dbRefList2 = dbRefProjects.child('-K_8dq9da4rBhdPl5FlK');
 
 
-  //Sync data in real time -> by 'on' method, 'snap' is snapshot of your data, so you nedd to call .val to get only value.
-  dbRefObject.on('value', snap => {
-      if (document.getElementById('object') !== 'undefined') {
-          document.getElementById('object').innerText = JSON.stringify(snap.val(), null, 3);
-      } else {
-          console.log("There is an error");
-      }
-  });
+      //Sync data in real time -> by 'on' method, 'snap' is snapshot of your data, so you nedd to call .val to get only value.
+      //  Just displaying the whole data..
+      dbRefProjects.on('value', snap => {
+          if (document.getElementById('box') !== 'undefined') {
+              document.getElementById('box').innerText = JSON.stringify(snap.val(), null, 3);
+          } else {
+              console.log("There is an error in showing you complete data");
+          }
+      });
+      // If anything happens in project 1
 
-  dbRefList.on('child_added', snap => {
-      var x = document.createElement('li');
-      x.innerText = snap.val();
-      if (document.getElementById('list') !== 'undefined') {
-          x.id = snap.key;
-          document.getElementById('list').appendChild(x);
-      } else {
-          console.log("there is a mistake");
-      }
 
-  });
+      // At firebase console if you do anything then by these functions, changes will be seen at HTML
+      dbRefList1.on('child_added', snap => {
+          var x = document.createElement('div');
+          x.innerText = snap.val();
+          if (document.getElementById('list1') !== 'undefined') {
+              x.id = snap.key;
+              document.getElementById('list1').appendChild(x);
+          } else {
+              console.log("There is a mistake in adding data to project 1");
+          }
 
-  dbRefList.on('child_changed', snap => {
-      var x = document.getElementById(snap.key); //Important: dont put coloumn like this: 'snap.key' -> this will not work.
-      console.log(x);
-      if (document.getElementById(snap.key) !== 'null') {
-          document.getElementById(snap.key).innerText = snap.val();
-      } else {
-          console.log("Updated child's key value is null");
-      }
-  });
+      });
 
-  dbRefList.on('child_removed', snap => {
-      if (document.getElementById(snap.key) !== 'null') {
-          document.getElementById(snap.key).remove();
-      } else {
-          console.log("Removed child's key value is null");
-      }
+      dbRefList1.on('child_changed', snap => {
+          var x = document.getElementById(snap.key); //Important: dont put coloumn like this: 'snap.key' -> this will not work.
+          console.log(x);
+          if (document.getElementById(snap.key) !== 'null') {
+              document.getElementById(snap.key).innerText = snap.val();
+          } else {
+              console.log("Updated child's key value is null");
+          }
+      });
 
-  });
+      dbRefList1.on('child_removed', snap => {
+          if (document.getElementById(snap.key) !== 'null') {
+              document.getElementById(snap.key).remove();
+          } else {
+              console.log("Removed child's key value is null");
+          }
 
-  */
+      });
+      */

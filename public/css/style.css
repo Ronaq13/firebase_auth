@@ -7,3 +7,12 @@
 #box {
     margin-top: 15%;
 }
+
+row {
+    border-bottom: 1pt solid gray;
+}
+
+#afterSignIn {
+    display: "none";
+    background-color: red;
+}
