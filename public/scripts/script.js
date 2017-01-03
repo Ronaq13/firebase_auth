@@ -100,71 +100,94 @@
  //**********************************************************************AUTHENTICATION-END************************************************************/
 
  //************************************-SENDING DATA TO DATABASE-********************* */
- var sendBtn = document.getElementById('sendBtn');
- sendBtn.addEventListener('click', writeAssignment);
 
- function writeAssignment() {
-     if (document.getElementById('quickstart-sign-in-status').textContent == "Signed in") {
-         var project_ID_1 = document.getElementById('project_ID_1');
-         var project_ID_2 = document.getElementById('project_ID_2');
+ //            Adding Project
+ var addProjectBtn = document.getElementById('addProjectBtn');
+ addProjectBtn.addEventListener('click', addProjectFunc);
 
-         // checking data
-         if (document.getElementById('username') !== null && document.getElementById('assiID') !== null && document.getElementById('roll_no') !== null) {
-             var username = document.getElementById('username').value;
-             var assiID = document.getElementById('assiID').value;
-             var roll_no = document.getElementById('roll_no').value;
+ function addProjectFunc() {
+     if (document.getElementById('quickstart-sign-in-status').textContent == 'Signed in') {
+         // Checking data
+         if (document.getElementById('addProjectID') !== null) {
+             var addProjectID = document.getElementById('addProjectID').value;
          }
-
-         var assiData = {
-             Name: username,
-             Roll_no: roll_no,
+         var projectData = {
+             tmp: "This is not an assignment of this project"
          };
-         var updates = {};
-         // Selecting Project
-         var ref;
-         if (project_ID_1.checked) {
-             ref = firebase.database().ref().child("projects").child("project_0001");
-             updates[assiID] = assiData;
-
-         } else if (project_ID_2.checked) {
-             ref = firebase.database().ref().child('projects').child("project_0002");
-             updates[assiID] = assiData;
-         } else {
-             console.log("Error in checkBox");
-         }
-
-         // sending data to firebase database
-         ref.update(updates);
-
+         var addPro = {};
+         addPro[addProjectID] = projectData;
+         // Sending the new Project
+         var refOfProject = firebase.database().ref().child('projects');
+         refOfProject.update(addPro);
      } else {
-         alert("First Sign In please.");
-     }
-
- }
-
-
- var updateBtn = document.getElementById('updateBtn');
- updateBtn.addEventListener('click', updateAssignment);
-
- function updateAssignment() {
-     if (document.getElementById('quickstart-sign-in-status').textContent == "Signed in") {
-         var project_ID_1 = document.getElementById('project_ID_1');
-         var project_ID_2 = document.getElementById('project_ID_2');
-
-         var ref;
-
-         if (project_ID_1.checked) {
-             ref = firebase.database().ref().child("projects").child("project_0001");
-
-         } else if (project_ID_2.checked) {
-             ref = firebase.database().ref().child('projects').child("project_0002");
-         } else {
-             console.log("Error in checkBox");
-         }
+         alert("First Sign in please");
      }
  }
 
- //*******************************************************************-- DATABASE --******************************************************************/
+ /*
+
+  function writeAssignment() {
+      if (document.getElementById('quickstart-sign-in-status').textContent == "Signed in") {
+          var project_ID_1 = document.getElementById('project_ID_1');
+          var project_ID_2 = document.getElementById('project_ID_2');
+
+          // checking data
+          if (document.getElementById('username') !== null && document.getElementById('assiID') !== null && document.getElementById('roll_no') !== null) {
+              var username = document.getElementById('username').value;
+              var assiID = document.getElementById('assiID').value;
+              var roll_no = document.getElementById('roll_no').value;
+          }
+
+          var assiData = {
+              Name: username,
+              Roll_no: roll_no,
+          };
+          var updates = {};
+          // Selecting Project
+          var ref;
+          if (project_ID_1.checked) {
+              ref = firebase.database().ref().child("projects").child("project_0001");
+              updates[assiID] = assiData;
+
+          } else if (project_ID_2.checked) {
+              ref = firebase.database().ref().child('projects').child("project_0002");
+              updates[assiID] = assiData;
+          } else {
+              console.log("Error in checkBox");
+          }
+
+          // sending data to firebase database
+          ref.update(updates);
+
+      } else {
+          alert("First Sign In please.");
+      }
+
+  }
+
+
+  var updateBtn = document.getElementById('updateBtn');
+  updateBtn.addEventListener('click', updateAssignment);
+
+  function updateAssignment() {
+      if (document.getElementById('quickstart-sign-in-status').textContent == "Signed in") {
+          var project_ID_1 = document.getElementById('project_ID_1');
+          var project_ID_2 = document.getElementById('project_ID_2');
+
+          var ref;
+
+          if (project_ID_1.checked) {
+              ref = firebase.database().ref().child("projects").child("project_0001");
+
+          } else if (project_ID_2.checked) {
+              ref = firebase.database().ref().child('projects').child("project_0002");
+          } else {
+              console.log("Error in checkBox");
+          }
+      }
+  }
+
+  //*******************************************************************-- DATABASE --******************************************************************/
 
  /*
       //Getting the element of HTML

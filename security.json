@@ -1,0 +1,18 @@
+{
+    "rules": {
+        "projects": {
+            "$projectID": {
+                ".read": false,
+                ".write": false,
+                "$assignmentID": {
+                    ".read": "root.child('projects_access').child($projectID).child(auth.uid).exists()",
+                    ".write": "root.child('projects_access').child($projectID).child(auth.uid).exists()"
+                }
+            }
+        },
+        "projects_access": {
+            ".read": false,
+            ".write": false
+        }
+    }
+}
