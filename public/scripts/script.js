@@ -153,7 +153,7 @@
          }
          var assiData = {
              Name: username,
-             Roll_no: roll_no,
+             Roll_no: roll_no
          };
          var updates = {};
          updates[assiID] = assiData;
@@ -163,32 +163,32 @@
      } else {
          alert("First Sign In please.");
      }
-
  }
 
- /*
-   var updateBtn = document.getElementById('updateBtn');
-   updateBtn.addEventListener('click', updateAssignment);
+ // Updating Assignment
+ var updateAssiBtn = document.getElementById('updateAssiBtn');
+ updateAssiBtn.addEventListener('click', updateAssignment);
 
-   function updateAssignment() {
-       if (document.getElementById('quickstart-sign-in-status').textContent == "Signed in") {
-           var project_ID_1 = document.getElementById('project_ID_1');
-           var project_ID_2 = document.getElementById('project_ID_2');
-
-           var ref;
-
-           if (project_ID_1.checked) {
-               ref = firebase.database().ref().child("projects").child("project_0001");
-
-           } else if (project_ID_2.checked) {
-               ref = firebase.database().ref().child('projects').child("project_0002");
-           } else {
-               console.log("Error in checkBox");
-           }
-       }
-   }
-   
- */
+ function updateAssignment() {
+     if (document.getElementById('quickstart-sign-in-status').textContent == "Signed in") {
+         if (document.getElementById('updateAssiUsername') !== null && document.getElementById('updateAssiID') !== null && document.getElementById('updateAssiRoll_no') !== null && document.getElementById('updateAssiProjectID') !== null) {
+             var projectID = document.getElementById('updateAssiProjectID').value;
+             var username = document.getElementById('updateAssiUsername').value;
+             var assiID = document.getElementById('updateAssiID').value;
+             var roll_no = document.getElementById('updateAssiRoll_no').value;
+         }
+         var assiData = {
+             Name: username,
+             Roll_no: roll_no
+         };
+         var updates = {};
+         updates[assiID] = assiData;
+         var ref = firebase.database().ref('projects/' + projectID);
+         ref.update(updates);
+     } else {
+         alert("Please Sign in first");
+     }
+ }
  //*******************************************************************-- DATABASE --******************************************************************/
 
  var ref = firebase.database().ref().child('projects').child('project_0001').orderByChild("Roll_no");
