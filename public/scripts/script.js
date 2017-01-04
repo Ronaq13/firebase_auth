@@ -205,64 +205,96 @@
      }
  }
  //********************************************************************-- DATABASE --******************************************************************/
+ /*
+  var ref = firebase.database().ref().child('projects').child('project_0001').orderByChild("Roll_no");
+  ref.on('value', function(snapshot) {
+      console.log(snapshot.val());
+  });
 
- var ref = firebase.database().ref().child('projects').child('project_0001').orderByChild("Roll_no");
- ref.on('value', function(snapshot) {
-     console.log(snapshot.val());
+
+
+  //Getting the element of HTML
+  var preObject = document.getElementById('object');
+  var ulList1 = document.getElementById('list1'); //Not accessible inside any function.
+  //Creating reference of database
+  */
+ const dbRefProjects = firebase.database().ref().child('projects');
+ const dbRefList1 = dbRefProjects.child('project_0001');
+ const dbRefList2 = dbRefProjects.child('project_0003');
+
+
+ //Sync data in real time -> by 'on' method, 'snap' is snapshot of your data, so you nedd to call .val to get only value.
+ //  Just displaying the whole data..
+ dbRefProjects.on('value', snap => {
+     if (document.getElementById('box') !== null) {
+         document.getElementById('box').innerText = JSON.stringify(snap.val(), null, 3);
+     } else {
+         console.log("There is an error in showing you complete data");
+     }
  });
 
 
+ var ref = firebase.database().ref().child("projects");
+ ref.on('value', function(snapshot) {
+     console.log(snapshot.key);
+     var list = snapshot.val();
+     console.log(list);
+     // for making div's 
+     // here I am getting project list.
+     for (var i = 0; i < snapshot.numChildren(); i++) {
+         var myDiv = document.createElement('pre');
+         myDiv.innerText = "Assignments of Project " + (i + 1) + "\n\n";
+         myDiv.id = "projectBox" + (i + 1);
+         myDiv.style.textAlign = "center";
+         myDiv.className = "jumbotron";
+         document.body.appendChild(myDiv);
+     }
+     // Extracting values
+     var i = 1;
+     snapshot.forEach(function(childSnapshot) {
+         console.log(childSnapshot.val());
+         console.log("projectBox" + i);
+         var Value = childSnapshot.val();
+         document.getElementById('projectBox' + i).innerText += "Project Key : " + childSnapshot.key + "\n\n";
+         document.getElementById('projectBox' + i).innerText += JSON.stringify(Value, null, 3);
+         console.log(snapshot.val());
+         i++;
+     });
+
+ });
+
+ // If anything happens in project 1
+
  /*
-      //Getting the element of HTML
-      var preObject = document.getElementById('object');
-      var ulList1 = document.getElementById('list1'); //Not accessible inside any function.
-      //Creating reference of database
-      const dbRefProjects = firebase.database().ref().child('projects');
-      const dbRefList1 = dbRefProjects.child('-K_67USuFWlpe6PmMqWm');
-      const dbRefList2 = dbRefProjects.child('-K_8dq9da4rBhdPl5FlK');
+  // At firebase console if you do anything then by these functions, changes will be seen at HTML
+  dbRefList1.on('child_added', snap => {
+      var x = document.createElement('div');
+      x.innerText = snap.val();
+      if (document.getElementById('list1') !== 'undefined') {
+          x.id = snap.key;
+          document.getElementById('list1').appendChild(x);
+      } else {
+          console.log("There is a mistake in adding data to project 1");
+      }
 
+  });
 
-      //Sync data in real time -> by 'on' method, 'snap' is snapshot of your data, so you nedd to call .val to get only value.
-      //  Just displaying the whole data..
-      dbRefProjects.on('value', snap => {
-          if (document.getElementById('box') !== 'undefined') {
-              document.getElementById('box').innerText = JSON.stringify(snap.val(), null, 3);
-          } else {
-              console.log("There is an error in showing you complete data");
-          }
-      });
-      // If anything happens in project 1
+  dbRefList1.on('child_changed', snap => {
+      var x = document.getElementById(snap.key); //Important: dont put coloumn like this: 'snap.key' -> this will not work.
+      console.log(x);
+      if (document.getElementById(snap.key) !== 'null') {
+          document.getElementById(snap.key).innerText = snap.val();
+      } else {
+          console.log("Updated child's key value is null");
+      }
+  });
 
+  dbRefList1.on('child_removed', snap => {
+      if (document.getElementById(snap.key) !== 'null') {
+          document.getElementById(snap.key).remove();
+      } else {
+          console.log("Removed child's key value is null");
+      }
 
-      // At firebase console if you do anything then by these functions, changes will be seen at HTML
-      dbRefList1.on('child_added', snap => {
-          var x = document.createElement('div');
-          x.innerText = snap.val();
-          if (document.getElementById('list1') !== 'undefined') {
-              x.id = snap.key;
-              document.getElementById('list1').appendChild(x);
-          } else {
-              console.log("There is a mistake in adding data to project 1");
-          }
-
-      });
-
-      dbRefList1.on('child_changed', snap => {
-          var x = document.getElementById(snap.key); //Important: dont put coloumn like this: 'snap.key' -> this will not work.
-          console.log(x);
-          if (document.getElementById(snap.key) !== 'null') {
-              document.getElementById(snap.key).innerText = snap.val();
-          } else {
-              console.log("Updated child's key value is null");
-          }
-      });
-
-      dbRefList1.on('child_removed', snap => {
-          if (document.getElementById(snap.key) !== 'null') {
-              document.getElementById(snap.key).remove();
-          } else {
-              console.log("Removed child's key value is null");
-          }
-
-      });
-      */
+  });
+  */
