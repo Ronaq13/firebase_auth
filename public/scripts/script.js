@@ -124,6 +124,20 @@
      }
  }
 
+ //   Deleting Project
+ var deleteProjectBtn = document.getElementById('deleteProjectBtn');
+ deleteProjectBtn.addEventListener('click', deleteProjectFunc);
+
+ function deleteProjectFunc() {
+
+     if (document.getElementById('deleteProjectID') !== null) {
+         var deleteProjectID = document.getElementById('deleteProjectID').value;
+     }
+
+     var refOfProject = firebase.database().ref("projects/" + deleteProjectID);
+     refOfProject.remove();
+ }
+
  /*
 
   function writeAssignment() {
@@ -186,8 +200,15 @@
           }
       }
   }
+  */
 
-  //*******************************************************************-- DATABASE --******************************************************************/
+ //*******************************************************************-- DATABASE --******************************************************************/
+
+ var ref = firebase.database().ref().child('projects').child('project_0001').orderByChild("Roll_no");
+ ref.on('value', function(snapshot) {
+     console.log(snapshot.val());
+ });
+
 
  /*
       //Getting the element of HTML
