@@ -204,6 +204,26 @@
          ref.remove();
      }
  }
+
+ // Checking Assignment exists or not
+ var checkAssiBtn = document.getElementById('checkAssiBtn');
+ checkAssiBtn.addEventListener('click', checkAssignment);
+
+ function checkAssignment() {
+     if (document.getElementById('checkAssiID') !== null && document.getElementById('checkAssiProjectID') !== null) {
+         var projectID = document.getElementById('checkAssiProjectID').value;
+         var assiID = document.getElementById('checkAssiID').value;
+     }
+     var refOfProject = firebase.database().ref('projects/' + projectID);
+     refOfProject.on('value', function(snapshot) {
+         console.log(snapshot.val());
+         if (snapshot.hasChild(assiID)) {
+             alert("Yes, Assignment with this ID is present");
+         } else {
+             alert("No, Assignment present with this ID");
+         }
+     });
+ }
  //********************************************************************-- DATABASE --******************************************************************/
  /*
   var ref = firebase.database().ref().child('projects').child('project_0001').orderByChild("Roll_no");
