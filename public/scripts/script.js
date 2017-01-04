@@ -189,6 +189,21 @@
          alert("Please Sign in first");
      }
  }
+
+ // Deleting Assignment
+ var deleteAssiBtn = document.getElementById('deleteAssiBtn');
+ deleteAssiBtn.addEventListener('click', deleteAssignment);
+
+ function deleteAssignment() {
+     if (document.getElementById('quickstart-sign-in-status').textContent == "Signed in") {
+         if (document.getElementById('deleteAssiID') !== null && document.getElementById('deleteAssiProjectID') !== null) {
+             var projectID = document.getElementById('deleteAssiProjectID').value;
+             var assiID = document.getElementById('deleteAssiID').value;
+         }
+         var ref = firebase.database().ref('projects/' + projectID + '/' + assiID);
+         ref.remove();
+     }
+ }
  //*******************************************************************-- DATABASE --******************************************************************/
 
  var ref = firebase.database().ref().child('projects').child('project_0001').orderByChild("Roll_no");
