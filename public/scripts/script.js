@@ -153,7 +153,7 @@
          }
          var assiData = {
              Name: username,
-             Roll_no: roll_no
+             Roll_no: Number(roll_no)
          };
          var updates = {};
          updates[assiID] = assiData;
@@ -256,31 +256,52 @@
 
  var ref = firebase.database().ref().child("projects");
  ref.on('value', function(snapshot) {
-     console.log(snapshot.key);
-     var list = snapshot.val();
-     console.log(list);
      // for making div's 
      // here I am getting project list.
      for (var i = 0; i < snapshot.numChildren(); i++) {
-         var myDiv = document.createElement('pre');
+         var myDiv = document.createElement('div');
          myDiv.innerText = "Assignments of Project " + (i + 1) + "\n\n";
          myDiv.id = "projectBox" + (i + 1);
          myDiv.style.textAlign = "center";
          myDiv.className = "jumbotron";
          document.body.appendChild(myDiv);
      }
-     // Extracting values
+
+     // ------------------displaying data (not sorted)
      var i = 1;
      snapshot.forEach(function(childSnapshot) {
          console.log(childSnapshot.val());
-         console.log("projectBox" + i);
          var Value = childSnapshot.val();
          document.getElementById('projectBox' + i).innerText += "Project Key : " + childSnapshot.key + "\n\n";
          document.getElementById('projectBox' + i).innerText += JSON.stringify(Value, null, 3);
-         console.log(snapshot.val());
          i++;
      });
 
+     // ----------------------- Sorting  data, displaying on console
+     var ref = firebase.database().ref('projects/');
+     ref.once('value', function(snapshot) {
+         var j = 1;
+         snapshot.forEach(function(childSnapshot) {
+             //    console.log(snapshot.key); //projects
+             //    console.log(childSnapshot.key); // project_0001
+             console.log("\n------------------------\n\n" + childSnapshot.key + "\n\n-------------------\n"); // project_0001
+             // make reference here
+             var refForAssi = firebase.database().ref('projects/' + childSnapshot.key).orderByChild("Roll_no");
+             refForAssi.once('value', function(snapshot) {
+                 snapshot.forEach(function(item) {
+                     console.log(JSON.stringify(item.val()));
+                 });
+             });
+         });
+     });
+     /*
+     var refExtra = firebase.database().ref().child('projects').child('project_0001').orderByChild("Roll_no");
+     refExtra.once('value', function(snapshot) {
+         snapshot.forEach(function(item) {
+             console.log(JSON.stringify(item.val().Roll_no));
+         });
+     });
+     */
  });
 
  // If anything happens in project 1
